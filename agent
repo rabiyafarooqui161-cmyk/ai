@@ -1,0 +1,42 @@
+class TableDrivenVacuumAgent:
+    def __init__(self):
+        self.percept_sequence = []
+
+        self.lookup_table = {
+            (('A', 'Dirty'),): 'Suck',
+            (('A', 'Clean'),): 'Right',
+            (('B', 'Dirty'),): 'Suck',
+            (('B', 'Clean'),): 'Left',
+            (('A', 'Dirty'), ('A', 'Clean')): 'Right',
+            (('A', 'Clean'), ('B', 'Dirty')): 'Suck',
+            (('A', 'Clean'), ('B', 'Clean')): 'Left',
+            (('B', 'Dirty'), ('B', 'Clean')): 'Left',
+            (('B', 'Clean'), ('A', 'Dirty')): 'Suck',
+            (('B', 'Clean'), ('A', 'Clean')): 'Right',
+            (('A', 'Dirty'), ('A', 'Clean'), ('B', 'Dirty')): 'Suck',
+            (('A', 'Dirty'), ('A', 'Clean'), ('B', 'Clean')): 'Left',
+            (('B', 'Dirty'), ('B', 'Clean'), ('A', 'Dirty')): 'Suck',
+            (('B', 'Dirty'), ('B', 'Clean'), ('A', 'Clean')): 'Right'
+        }
+
+    def act(self, current_percept):
+        self.percept_sequence.append(current_percept)
+        history_key = tuple(self.percept_sequence)
+        return self.lookup_table.get(history_key, 'NoOp')
+
+
+if __name__ == "__main__":
+    agent = TableDrivenVacuumAgent()
+
+    percept_1 = ('A', 'Dirty')
+    action_1 = agent.act(percept_1)
+    print(f"Perceived: {agent.percept_sequence} -> Recommended Action: {action_1}")
+
+    percept_2 = ('A', 'Clean')
+    action_2 = agent.act(percept_2)
+    print(f"Perceived: {agent.percept_sequence} -> Recommended Action: {action_2}")
+
+    percept_3 = ('B', 'Dirty')
+    action_3 = agent.act(percept_3)
+    print(f"Perceived: {agent.percept_sequence} -> Recommended Action: {action_3}")
+
