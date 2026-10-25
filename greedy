@@ -1,0 +1,58 @@
+import heapq
+
+
+def greedy_best_first_search(graph, heuristics, start, goal):
+    frontier = []
+    heapq.heappush(frontier, (heuristics[start], start, [start]))
+
+    visited = set()
+
+    while frontier:
+        _, current_node, path = heapq.heappop(frontier)
+
+        if current_node == goal:
+            return path
+
+        if current_node not in visited:
+            visited.add(current_node)
+
+            for neighbor in graph.get(current_node, []):
+                if neighbor not in visited:
+                    heapq.heappush(
+                        frontier,
+                        (heuristics[neighbor], neighbor, path + [neighbor])
+                    )
+
+    return None
+
+
+if __name__ == "__main__":
+    example_graph = {
+        'A': ['B', 'C'],
+        'B': ['D', 'E'],
+        'C': ['F'],
+        'D': [],
+        'E': ['F'],
+        'F': []
+    }
+
+    straight_line_heuristics = {
+        'A': 6,
+        'B': 4,
+        'C': 4,
+        'D': 6,
+        'E': 2,
+        'F': 0
+    }
+
+    start_node = 'A'
+    goal_node = 'F'
+
+    result_path = greedy_best_first_search(
+        example_graph,
+        straight_line_heuristics,
+        start_node,
+        goal_node
+    )
+
+    print(f"Path found from {start_node} to {goal_node}: {result_path}")
